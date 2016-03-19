@@ -12,7 +12,8 @@ void main()
 	int base2len = strlen(test1)/2;
 	printf("%d Test #1: %s converted to ", base2len, test1);
 	int i = 0;
-	for(;i < base2len; i++)
+	for(;i < base2len; i++) {
 		printf("[%d]", result[i]);
+	}
 	printf("\n");
 }
