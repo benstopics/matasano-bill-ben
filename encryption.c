@@ -49,9 +49,9 @@ unsigned char *HexToBase2(unsigned char *hex) {
 	for (;i < hexlen; i+=2) {
 		unsigned char leftnib = HexCharToBase10(hex[i]);
 		unsigned char rightnib = HexCharToBase10(hex[i+1]);
-		printf("%d %d\n", leftnib, rightnib);
+		printf("%u %u\n", leftnib, rightnib);
 		result[i/2] = (leftnib << 4) | rightnib;
-		printf("%d %d\n", i/2, result[i/2]);
+		printf("%d %u\n", i/2, result[i/2]);
 	}
 	
 	return result;
