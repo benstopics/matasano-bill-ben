@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-unsigned char HexCharToBase10(unsigned char hex) {
+unsigned int HexCharToBase10(unsigned char hex) {
 	switch (hex) {
 		case '0':
 			return 0;
@@ -39,19 +39,18 @@ unsigned char HexCharToBase10(unsigned char hex) {
 	}
 }
 
-// Assumes 
 unsigned char *HexToBase2(unsigned char *hex) {
-	int hexlen = strlen(hex); // Length of string
-	unsigned char *result = (unsigned char *) malloc(hexlen / 2);
+	int hexlen = strlen(hex);
+	unsigned char *result = (unsigned char *) malloc((hexlen / 2) + ((strlen(hex)%2 == 1) ? 1 : 0));
 	printf("%d\n", hexlen);
 	
 	int i = 0;
 	for (;i < hexlen; i+=2) {
 		unsigned char leftnib = HexCharToBase10(hex[i]);
-		unsigned char rightnib = HexCharToBase10(hex[i+1]);
-		printf("%u %u\n", leftnib, rightnib);
+		unsigned char rightnib = (i+1 < hexlen) ? HexCharToBase10(hex[i+1]) : 0; // Append zero if odd length
+		printf("nibs: %u %u\n", leftnib, rightnib);
 		result[i/2] = (leftnib << 4) | rightnib;
-		printf("%d %u\n", i/2, result[i/2]);
+		printf("i result: %d %u\n", i/2, result[i/2]);
 	}
 	
 	return result;
