@@ -2,6 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 
+unsigned char *Base2ToBase64(unsigned char *base2)
+{
+	unsigned char *result;
+	unsigned char firstLetter[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 
+	
+	
+}
+
 unsigned int HexCharToBase10(unsigned char hex) {
 	switch (hex) {
 		case '0':
