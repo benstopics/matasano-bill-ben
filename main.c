@@ -1,17 +1,18 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "encryption.h"
 
 void main()
 {
-		char *test1 = "0";
-		char *ExpectedResult1 = "0";
-		
-		char *result = HexToBase64(test1);
-		
-		printf("\n Test #1: %s converted to %s \n", test1, result1);
-
-		
-		
-
+	unsigned char *test1 = "0049";
+	
+	unsigned char *result = HexToBase2(test1);
+	
+	int base2len = strlen(test1)/2;
+	printf("%d Test #1: %s converted to ", base2len, test1);
+	int i = 0;
+	for(;i < base2len; i++)
+		printf("[%d]", result[i]);
+	printf("\n");
 }
