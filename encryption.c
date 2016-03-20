@@ -2,13 +2,61 @@
 #include <stdio.h>
 #include <string.h>
 
-unsigned char hashTable[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
-unsigned char *Base2ToBase64(unsigned char *base2)
+unsigned char hashTable[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
+                             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
+							 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
+unsigned char *Base2ToBase64(unsigned char *base2, size_t size)
 {
 	unsigned char *result;
-	
+	unsignned char buffer = 0;
+	int len = (strlen(base2) / 3) + (strlen(base2) % 3));
+	int i, numOfBits = 6;
+	int bitsToShift = 2;
+	int shifts[4] = {0,0,0,0};
+	result = malloc(len);
+	//unsigned char mask;
+	int j = 0;
+	for (i = 0; i < size; i+=3) {
+		// Extract 4 6-bit digits from 3 bytes 
+		*(result + j + 0) = hashTable[shifter(*(base2    ),  2, 0)];
+		printf("i = %d, j = %d, *(result + j + 0) = %u", i, j, *(result + j + 0));
+		*(result + j + 1) = hashTable[shifter(*(base2    ), -6, 2) & shifter(*(base2 + 1), 4, -4)];
+		*(result + j + 2) = (i + 1 < size) ? hashTable[shifter(*(base2 + 1), -4, 4) & shifter(*(base2 + 2), 6,  0)] : '=';
+		*(result + j + 3) = (i + 2 < size) ? hashTable[shifter(*(base2 + 2), -2, 2)] : '=';
+		j += 4;
+		base2 += 3;
+	}
+}
+unsigned char shifter(unsigned char byte, int shift1, int shift2) {
+	int i = 0;
+	int len = 0;
+	if (shift1 > 0) {
+		len = shift1;
+		for (j = 0; j < len; j++) {	byte >> 1;}
+	} else {			
+		len = 0 - shift1;
+		for (j = 0; j < len; j++) {byte << 1;}
+	}
+	if (shift2 > 0) {
+		len = shift2;
+		for (j = 0; j < len; j++) {	byte >> 1;}
+	} else {			
+		len = 0 - shift2;
+		for (j = 0; j < len; j++) {byte << 1;}
+	}
+	return byte;
 }
 
+unsigned char buildMask(int numOfBits)
+{
+	int i;
+	unsigned char mask = 1;
+	for (i =0 ; i < numOfBits; i++) {
+		mask << 1;
+		mask += 1;
+	}
+	return mask;
+}
 unsigned int HexCharToBase10(unsigned char hex) {
 	switch (hex) {
 		case '0':
