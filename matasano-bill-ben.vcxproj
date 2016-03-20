@@ -66,9 +66,12 @@
   <ItemGroup>
     <ClCompile Include="encryption.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="set1challenge1.c" />
+    <ClCompile Include="set1challenge2.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="encryption.h" />
+    <ClInclude Include="set1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -18,12 +18,21 @@
     <ClCompile Include="encryption.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="set1challenge1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="set1challenge2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="encryption.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="set1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
