@@ -2,56 +2,87 @@
 #include <stdio.h>
 #include <string.h>
 
-unsigned char shifter(unsigned char byte, int shift1, int shift2);
+unsigned char shifter(unsigned char byte, int shift[]);
 
 unsigned char hashTable[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 
                              'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 
 							 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
-unsigned char *Base2ToBase64(unsigned char *base2, size_t size)
+unsigned char *Base2ToBase64(unsigned char *originalBase2, size_t size)
 {
-	unsigned char *result;
+	unsigned char *result, *base2;
 	unsigned char buffer = 0;
-	int len = (strlen(base2) / 3) + (strlen(base2) % 3) + 1;
-	int i, numOfBits = 6;
-	int bitsToShift = 2;
-	int shifts[4] = {0,0,0,0};
-	result = malloc(len);
-	//unsigned char mask;
+	int totalBitsNeeded;
+	int len;
+	// # of bytes in the base 64 number will be 4*(ceil(size/3)). This is with padding.
+	// If size == 1 then we have a problem because we need bits from the second byte of base for the lower 4 bits of the second hex digit, but there are no such bytes.
+	switch (size) {
+		case 1:			// We need at least 2 bytes so we will add a zero at the end
+			len = 4;
+			base2 = malloc(2);
+			memcpy(base2, originalBase2, size);
+			*(base2 + 1) = 0;
+			break;
+		case 2:			// If we only have two bytes then the logic below will detect that and we'll skip it.
+			len = 4;
+			base2 = malloc(2);
+			memcpy(base2, originalBase2, size);
+			break;
+		case 3:
+			len = 4;
+			base2 = malloc(3);
+			memcpy(base2, originalBase2, size);
+			break;
+
+		default:
+			len = (4 * (size / 3));
+			len = len + (3 - (len % 3));
+			base2 = malloc(size);
+			memcpy(base2, originalBase2, size);
+			break;
+	}
+	size_t i;
+	unsigned int nib1, nib2, index;
+	result = malloc(len+1);	// Allocate space for the base 64 string and the null terminator
 	int j = 0;
-	for (i = 0; i < size - 1; i+=3) {
+	for (i = 0; i < size; i += 3) {
 		printf("i = %d, j = %d, *(result + j + 0) = %u\n", i, j, *(result + j + 0));
-	
+
 		// Extract 4 6-bit digits from 3 bytes 
-		*(result + j + 0) = hashTable[shifter(*(base2    ),  2, 0)];
-		printf("hash --> %u = %c\n", *base2, hashTable[shifter(*(base2    ),  2, 0)]);
-		*(result + j + 1) = hashTable[shifter(*(base2    ), -6, 2) & shifter(*(base2 + 1), 4, -4)];
-		*(result + j + 2) = (i + 1 < size) ? hashTable[shifter(*(base2 + 1), -4, 4) & shifter(*(base2 + 2), 6,  0)] : '=';
-		*(result + j + 3) = (i + 2 < size) ? hashTable[shifter(*(base2 + 2), -2, 2)] : '=';
+		*(result + (j + 0)) = hashTable[shifter(*base2, ((int[2]) { 2, 0 }))];
+		printf("hash --> %u = %c\n", *base2, hashTable[shifter(*(base2), (int[]) { 2, 0 })]);
+
+
+		nib1 = shifter(*(base2), (int[]) { -6, 2, 0 });
+		nib2 = shifter(*(base2 + 1), (int[]) { 4, 0 });
+		index = nib1 | nib2;
+
+		*(result + (j + 1)) = hashTable[index];
+
+		*(result + (j + 2)) = (i + 1 < size) ? hashTable[shifter(*(base2 + 1), (int[]) { -4, 2, 0 }) | shifter(*(base2 + 2), (int[]) { 6, 0 })] : '=';
+
+		*(result + (j + 3)) = (i + 2 < size) ? hashTable[shifter(*(base2 + 2), (int[]) { -2, 2, 0 })] : '=';
 		j += 4;
 		base2 += 3;
 	}
-	
-	result[strlen(result) - 1] = '\0';
+
+	result[len] = '\0';	// We allocated space for the null terminator. It's all good.
 	
 	return result;
 }
-unsigned char shifter(unsigned char byte, int shift1, int shift2) {
+unsigned char shifter(unsigned char byte, int shift[]) {
 	int i = 0;
 	int len = 0;
 	int j;
-	if (shift1 > 0) {
-		len = shift1;
-		for (j = 0; j < len; j++) {	byte >> 1;}
-	} else {			
-		len = 0 - shift1;
-		for (j = 0; j < len; j++) {byte << 1;}
-	}
-	if (shift2 > 0) {
-		len = shift2;
-		for (j = 0; j < len; j++) {	byte >> 1;}
-	} else {			
-		len = 0 - shift2;
-		for (j = 0; j < len; j++) {byte << 1;}
+	while (shift[i] != 0) {
+		if (shift[i] > 0) {
+			len = shift[i];
+			for (j = 0; j < len; j++) { byte = byte >> 1; }
+		}
+		else {
+			len = 0 - shift[i];
+			for (j = 0; j < len; j++) { byte  = byte << 1; }
+		}
+		i++;
 	}
 	return byte;
 }
