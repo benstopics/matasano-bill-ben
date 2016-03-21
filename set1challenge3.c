@@ -11,7 +11,7 @@ unsigned char *set3challenge3(unsigned char *msg, size_t size) {
 	unsigned char *result = malloc(size);
 	unsigned char *tmp = malloc(size + 1);
 	unsigned char j;
-	int i;
+	int i, k;
 	unsigned char highNibble, lowNibble;
 	unsigned char ASCIIChar;
 
@@ -20,14 +20,16 @@ unsigned char *set3challenge3(unsigned char *msg, size_t size) {
 		for (j = 0; j < size; j++) {
 			*(tmp + j) = *(msg + j) ^ i;
 		}
-		// Convert the newly created string to ASCII characters. We assume that the newly created string contains 2-byte ASII hex codes.
+		k = 0;
+		// Convert the newly created string to ASCII characters. We assume that the newly created string contains 2-byte ASCII hex codes.
 		for (j = 0; j < size; j += 2) {
 			highNibble = *(tmp + j);
 			lowNibble = *(tmp + j + 1);
 			ASCIIChar = (ASCIIhexToBinary(highNibble) * 16) + ASCIIhexToBinary(lowNibble);
-			*(tmp + j) = ASCIIChar;
+			*(tmp + k) = ASCIIChar;
+			k++;
 		}
-		*(tmp + j) = 0;
+		*(tmp + size) = 0;
 		printf("\n %d <%s>", i, tmp);
 	}
 	return result;
