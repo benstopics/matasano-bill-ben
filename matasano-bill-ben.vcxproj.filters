@@ -27,6 +27,9 @@
     <ClCompile Include="set1challenge2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="set1challenge3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="encryption.h">

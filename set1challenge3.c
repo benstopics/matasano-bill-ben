@@ -3,24 +3,37 @@
 * Bill Nicholson                  *
 *                                 *
 ***********************************/
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "set1challenge3.h"
+#include "encryption.h"
 
-unsigned char *set3challenge3(unsigned char *msg, size_t size) {
-	unsigned char *result = malloc(size);
-	unsigned char *tmp = malloc(size + 1);
+unsigned char *set1challenge3(unsigned char *msg) {
+	size_t size = GetHexSizeOfStr(msg);
+	unsigned char *result = malloc(size + 1); // +1 for null terminator
+	unsigned char *hexData = HexToBase2(msg);
 	unsigned char j;
-	int i, k;
+	unsigned int i, k;
 	unsigned char highNibble, lowNibble;
 	unsigned char ASCIIChar;
 
 	for (i = 0; i < 256; i++) {
 		// XOR the original string with a constant value
+		unsigned char *tmp = malloc(size + 1); // +1 for null terminator
+		*(tmp + size) = 0; // null terminator
+		printf("%u ==> ", i);
 		for (j = 0; j < size; j++) {
-			*(tmp + j) = *(msg + j) ^ i;
-		}
-		k = 0;
+			*(tmp + j) = *(hexData + j) ^ i;
+			if (*(tmp + j) == 0) // Convert false null to space for printing
+				*(tmp + j) = 32;
+			printf("%c", *(tmp + j));
+		} printf("\n");
+
+		// Eye-balled it
+		if (i == 120)
+			result = tmp;
+
+		/*k = 0;
 		// Convert the newly created string to ASCII characters. We assume that the newly created string contains 2-byte ASCII hex codes.
 		for (j = 0; j < size; j += 2) {
 			highNibble = *(tmp + j);
@@ -28,9 +41,8 @@ unsigned char *set3challenge3(unsigned char *msg, size_t size) {
 			ASCIIChar = (ASCIIhexToBinary(highNibble) * 16) + ASCIIhexToBinary(lowNibble);
 			*(tmp + k) = ASCIIChar;
 			k++;
-		}
-		*(tmp + size) = 0;
-		printf("\n %d <%s>", i, tmp);
+		}*/
+		//printf("\n %d <%s>", i, tmp, size);
 	}
 	return result;
 }

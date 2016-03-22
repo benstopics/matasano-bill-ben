@@ -68,6 +68,7 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="set1challenge1.c" />
     <ClCompile Include="set1challenge2.c" />
+    <ClCompile Include="set1challenge3.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="encryption.h" />
