@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿Build started 3/22/2016 9:28:44 AM.
      1>Project "C:\Users\nicomp\Google Drive\Matasano-Bill-Ben\matasano-bill-ben\matasano-bill-ben\matasano-bill-ben.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
@@ -15,3 +16,7 @@
 Build succeeded.
 
 Time Elapsed 00:00:00.24
+=======
+﻿  main.c
+  matasano-bill-ben.vcxproj -> C:\Users\bward\Documents\GitHub\matasano-bill-ben\Debug\matasano-bill-ben.exe
+>>>>>>> origin/master
