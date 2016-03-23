@@ -1,3 +1,10 @@
+/****************************************
+ * encryption.c                         *
+ * Bill Nicholson                       *
+ * nicholdw@ucmail.uc.edu               *
+ * Ben Ward                             *
+ * wardb4@mail.uc.edu                   *
+ ****************************************/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

@@ -9,7 +9,7 @@ Find it.
 (Your code from #3 should help.)
 
 Solution:
-line # 170: XOR character = 53, high score = 15, decoded = Now that the party is jumping
+line # 170 (zero-based): XOR character = 53, high score = 15, decoded = Now that the party is jumping
 
 ***********************************/
 #include <string.h>
@@ -34,26 +34,31 @@ void set1Challenge4() {
 
 	if (handle != NULL) {
 		while (fgets(buffer, 80, handle) != 0) {
-			
+			//if (i == 170)
+			//	i = i;
 			//printf("\n %d: processing %s", i, buffer);
 			processText(buffer, &XORCharacter, &highestScore, &bestDecode);
 			if (highestScore > 0) {
 				printf("\n line # %d: XOR character = %d, high score = %d, decoded = %s", i, XORCharacter, highestScore, bestDecode);
+				int x = strlen(bestDecode);
+				printf("\n 1 %u %c", bestDecode[x], bestDecode[x]);
+				printf("\n 2 %u %c", bestDecode[x - 1], bestDecode[x-1]);
+				printf("\n 3 %u %c", bestDecode[x - 2], bestDecode[x-2]);
+				//printf("\n 3 %u", bestDecode[x + 1]);
 			}
 			i++;
-
 			//break;
 		}
-
 	} else {
 		perror(DATAFILE);
 		printf("\n Error opening %s", DATAFILE);
 	}
-
-
 }
 static void processText(char *msg, unsigned char *XORCharacter, int *highestScore, char **bestDecode) {
-	size_t size = GetHexSizeOfStr(msg);
+
+	// I think the GetHexSizeOfStr is adding one extra char. I subtract it off here. This prevents a spurious character a the end of the decoded string, after the line feed that is in the string. 
+	size_t size = GetHexSizeOfStr(msg) - 1;
+	
 	long score, highScore = -1;
 	unsigned char *hexData = HexToBase2(msg);
 	unsigned int i, j, highScoreIdx = 0;
