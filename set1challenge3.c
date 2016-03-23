@@ -40,29 +40,12 @@ unsigned char *set1challenge3(unsigned char *msg) {
 		if (score > highScore) { 
 			highScore = score;
 			highScoreIdx = i;
-			printf("\n new high score = %ld  at index %d ==> ", score, i);
+			printf("\n new high score = %ld WITH XOR character %d ==> ", score, i);
 			for (j = 0; j < size; j++) {
 				printf("%c", *(tmp + j));
 			}
-
 		}
-
-		// Eye-balled it
-		//if (i == 120)
-		//	result = tmp;
-
-		/*k = 0;
-		// Convert the newly created string to ASCII characters. We assume that the newly created string contains 2-byte ASCII hex codes.
-		for (j = 0; j < size; j += 2) {
-			highNibble = *(tmp + j);
-			lowNibble = *(tmp + j + 1);
-			ASCIIChar = (ASCIIhexToBinary(highNibble) * 16) + ASCIIhexToBinary(lowNibble);
-			*(tmp + k) = ASCIIChar;
-			k++;
-		}*/
-		//printf("\n %d <%s>", i, tmp, size);
 	}
-	//printf("\n High Score was index %d", highScoreIdx);
 	return result;
 }
 

@@ -7,6 +7,10 @@ Detect single-character XOR
 One of the 60-character strings in this file has been encrypted by single-character XOR.
 Find it.
 (Your code from #3 should help.)
+
+Solution:
+line # 170: XOR character = 53, high score = 15, decoded = Now that the party is jumping
+
 ***********************************/
 #include <string.h>
 #include <stdio.h>
@@ -24,16 +28,21 @@ void set1Challenge4() {
 	fopen_s(&handle, DATAFILE, "r");
 	char buffer[80];
 	int i = 0;
+	unsigned char XORCharacter;
+	int highestScore;
+	char *bestDecode;
 
 	if (handle != NULL) {
 		while (fgets(buffer, 80, handle) != 0) {
 			
-			printf("\n %d: processing %s", i, buffer);
-			processText(buffer);
-
-
-
+			//printf("\n %d: processing %s", i, buffer);
+			processText(buffer, &XORCharacter, &highestScore, &bestDecode);
+			if (highestScore > 0) {
+				printf("\n line # %d: XOR character = %d, high score = %d, decoded = %s", i, XORCharacter, highestScore, bestDecode);
+			}
 			i++;
+
+			//break;
 		}
 
 	} else {
@@ -43,11 +52,13 @@ void set1Challenge4() {
 
 
 }
-static void processText(char *msg) {
+static void processText(char *msg, unsigned char *XORCharacter, int *highestScore, char **bestDecode) {
 	size_t size = GetHexSizeOfStr(msg);
 	long score, highScore = -1;
 	unsigned char *hexData = HexToBase2(msg);
 	unsigned int i, j, highScoreIdx = 0;
+	*bestDecode = malloc(size + 1); // +1 for null terminator
+	*(*bestDecode + size) = 0;
 	for (i = 0; i < 256; i++) {
 		// XOR the original string with a constant value
 		unsigned char *tmp = malloc(size + 1); // +1 for null terminator
@@ -64,13 +75,13 @@ static void processText(char *msg) {
 		if (score > highScore) {
 			highScore = score;
 			highScoreIdx = i;
-			printf("\n new high score = %ld  at index %d ==> ", score, i);
-			for (j = 0; j < size; j++) {
-				printf("%c", *(tmp + j));
-			}
-
+			//printf("\n new high score = %ld WITH XOR character %d ==> ", score, i);
+			memcpy(*bestDecode, tmp, size);
+			//for (j = 0; j < size; j++) {printf("%c", *(tmp + j));}
 		}
 	}
+	*XORCharacter = highScoreIdx;
+	*highestScore = highScore;
 }
 
 static long analyze(char *tmp) {
@@ -99,5 +110,20 @@ static long analyze(char *tmp) {
 			}
 		}
 	}
+	// r,s,t,l,n,e occur most often according to Wheel of Fortune TV show
+	// See also https://en.wikipedia.org/wiki/Letter_frequency
+	score += scoreArray['R' - 'A'];
+	score += scoreArray['S' - 'A'];
+	score += scoreArray['T' - 'A'];
+	score += scoreArray['L' - 'A'];
+	score += scoreArray['N' - 'A'];
+	score += scoreArray['A' - 'A'];
+	score += scoreArray['E' - 'A'];
+	score += scoreArray['I' - 'A'];
+	score += scoreArray['O' - 'A'];
+	score += scoreArray['U' - 'A'];
+
+	if (controlCharacterCount > 0) score = 0;
+	if (spaceCount < 5) score = 0;
 	return score;
 }
