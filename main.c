@@ -22,7 +22,10 @@ void main() {
 
 //	set1Challenge4();
 
-	set1Challenge5();
+//	set1Challenge5();
+
+
+	set1Challenge6();
 
 	getc(stdin);
 

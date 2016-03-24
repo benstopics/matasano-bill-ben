@@ -17,6 +17,7 @@ unsigned char *set1challenge3(unsigned char *msg);
 
 void set1challenge4();
 void set1challenge5();
+void set1Challenge6();
 
 
 #endif
